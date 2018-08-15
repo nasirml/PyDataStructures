@@ -100,7 +100,7 @@ class BST(object):
             - find smallest element on the right subtree. go left --> left as dfs, since
               for bst, small values are always at left
             - in-order successor might have a right child. have to copy it in its place
-            - keep track of: current = node to be deleted, current2 = victim node
+            - keep track of: current = node to be 'deleted', current2 = victim node
                              prev_tmp = node before the 'victim' node
             '''
             prev_tmp = current
@@ -110,16 +110,24 @@ class BST(object):
                 current2 = current2.left    # victim node
             current.val = current2.val
             #print(current2.val), ; print(prev_tmp.val)
-            # put the right subtree of the victim node in its appropriate place or None
-            if current2.val < prev_tmp.val:
-                prev_tmp.left = current2.right
-            else:
-                prev_tmp.right = current2.right
+            # though only right subtree is present or both no child
+            self.delete_node_with_one_child(current2, prev_tmp)
         else:
-            if current.left != None:
-                current.val = current.left.val
-                current.left = None
-            else:
-                current.val = current.right.val
-                current.right = None
+            self.delete_node_with_one_child(current, prev)
         return self.root
+
+    def delete_node_with_one_child(self, current, prev):
+        '''
+        - delete helper
+        - put the left/right subtree of the victim node in its appropriate place
+        '''
+        if current.left != None:
+            if current.val < prev.val:
+                prev.left = current.left
+            else:
+                prev.right = current.left
+        else:
+            if current.val < prev.val:
+                prev.left = current.right
+            else:
+                prev.right = current.right
